@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Red</string>
+    <string name="title_home">Heart</string>
+    <string name="title_dashboard">Add</string>
+    <string name="title_notifications">List</string>
+    <string name="add">Add</string>
+    <string name="reset">Reset</string>
+    <string name="delete">Delete</string>
+    <string name="camera">Camera</string>
+</resources>
