@@ -1,10 +1,13 @@
 package com.infinity.ishkhan.red
 
+import android.content.Context
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.colorcard_layout.view.*
 import java.io.File
 import kotlin.collections.List
@@ -12,39 +15,40 @@ import kotlin.collections.List
 class ColorAdapter (private var colors:List<Color>)
     : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
 
+    private lateinit var context: Context
+
     class ViewHolder(val cardView: CardView) : RecyclerView.ViewHolder(cardView)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val cardView = LayoutInflater.from(parent.context)
             .inflate(R.layout.colorcard_layout,parent,false) as CardView
 
+        context = parent.context
         return ViewHolder(cardView)
     }
 
     override fun getItemCount(): Int = colors.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cardView.cardColorName.text = colors[position].name
+        holder.cardView.cardColorName.text = "$position: ${colors[position].name}"
         holder.cardView.setCardBackgroundColor(colors[position].color)
-        holder.cardView.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus){
-                v.layoutParams.height = 100
+        holder.cardView.setOnClickListener { v->
+            if (v.buttonDelete.visibility == View.GONE){
+                v.layoutParams.height += 100
                 v.buttonDelete.visibility = View.VISIBLE
             }
             else{
-                v.layoutParams.height = 65
+                v.layoutParams.height -= 100
                 v.buttonDelete.visibility = View.GONE
             }
-            notifyItemChanged(position)
         }
 
         holder.cardView.buttonDelete.setOnClickListener {
-            val file = File(com.infinity.ishkhan.red.List().context!!.filesDir,"theColors")
-            var lines = file.readLines()
-            lines = lines.take(position - 1 ) + lines.drop(position)
-            file.writeText(lines.joinToString(System.lineSeparator()))
-            colors = colors.take(position - 1 ) + colors.drop(position)
+            colors = colors.take(position) + colors.drop(position + 1)
+            val file = File(context.filesDir,"theColors")
+            file.writeText(colors.joinToString{color -> "${color.name}:${color.color}\n"})
 
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, colors.size)

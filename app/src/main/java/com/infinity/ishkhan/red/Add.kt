@@ -38,7 +38,7 @@ class Add : Fragment() {
             val color = Color(selectedColorEnvelope.colorHtml,selectedColorEnvelope.color)
 
             if (saveColor(color))
-                Toast.makeText(context,"Saved",Toast.LENGTH_LONG).show()
+                Toast.makeText(context,"Saved",Toast.LENGTH_SHORT).show()
             else
                 Toast.makeText(context,"Failed",Toast.LENGTH_LONG).show()
 

@@ -44,7 +44,7 @@ class List : Fragment() {
         viewManager = LinearLayoutManager(context)
 
         recyclerView = view.colorsRecycler.apply {
-            setHasFixedSize(true)
+            setHasFixedSize(false)
             layoutManager = viewManager
             adapter = viewAdapter
         }
