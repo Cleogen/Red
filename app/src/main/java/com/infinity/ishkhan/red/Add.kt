@@ -1,9 +1,6 @@
 package com.infinity.ishkhan.red
 
 
-import android.graphics.ImageDecoder
-import android.graphics.drawable.Drawable
-import android.media.ImageReader
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,10 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.skydoves.colorpickerpreference.ColorEnvelope
-import kotlinx.android.synthetic.main.fragment_add.*
 import kotlinx.android.synthetic.main.fragment_add.view.*
 import java.io.File
 import java.lang.Exception
+import android.net.Uri
+import kotlinx.android.synthetic.main.fragment_add.*
+import org.json.JSONObject
+
 
 class Add : Fragment() {
 
@@ -35,12 +35,25 @@ class Add : Fragment() {
         }
 
         view.buttonAdd.setOnClickListener {
-            val color = Color(selectedColorEnvelope.colorHtml,selectedColorEnvelope.color)
+            val uri = Uri.Builder().scheme("http")
+                .authority("thecolorapi.com")
+                .appendPath("id")
+                .appendQueryParameter("hex",selectedColorEnvelope.colorHtml)
+                .build().toString()
 
-            if (saveColor(color))
-                Toast.makeText(context,"Saved",Toast.LENGTH_SHORT).show()
-            else
-                Toast.makeText(context,"Failed",Toast.LENGTH_LONG).show()
+            progressBar.visibility = View.VISIBLE
+
+            NetworkCall(object :NetworkCall.AsyncResponse{
+                override fun onFinish(out: Boolean, response:JSONObject?) {
+                    val name = response!!.getJSONObject("name").getString("value")
+                    val color = Color(name,selectedColorEnvelope.color)
+                    if (saveColor(color))
+                        Toast.makeText(context, "$name Saved", Toast.LENGTH_SHORT).show()
+                    else
+                        Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
+                    progressBar.visibility = View.GONE
+                }
+            }).execute(uri)
 
         }
 
@@ -63,7 +76,6 @@ class Add : Fragment() {
     }
 
     private fun saveColor(color: Color): Boolean {
-
         return try {
             File(context!!.filesDir, "theColors")
                 .appendText("${color.name}:${color.color}\n")

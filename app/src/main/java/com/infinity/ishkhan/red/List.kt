@@ -33,7 +33,7 @@ class List : Fragment() {
 
             List(theColors.size){
                 val color = theColors[it].split(":")
-                Color(Integer.toHexString(color[1].toInt()).substring(2),color[1].toInt())
+                Color(color[0],color[1].toInt())
             }
 
         }catch (e:Exception){

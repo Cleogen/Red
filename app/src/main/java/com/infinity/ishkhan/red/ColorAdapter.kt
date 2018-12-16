@@ -32,7 +32,7 @@ class ColorAdapter (private var colors:List<Color>)
     override fun getItemCount(): Int = colors.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cardView.cardColorName.text = "$position: ${colors[position].name}"
+        holder.cardView.cardColorName.text = colors[position].name
         holder.cardView.setCardBackgroundColor(colors[position].color)
         holder.cardView.setOnClickListener { v->
             if (v.buttonDelete.visibility == View.GONE){
