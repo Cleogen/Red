@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_list.view.*
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 import java.lang.Exception
 import kotlin.collections.List
@@ -29,11 +31,11 @@ class List : Fragment() {
         val colorArray:List<Color>
 
         colorArray = try {
-            val theColors = File(context!!.filesDir, "theColors").readLines()
-
-            List(theColors.size){
-                val color = theColors[it].split(":")
-                Color(color[0],color[1].toInt())
+            val theColors = JSONObject(File(context!!.filesDir, "theColors").readText()).getJSONArray("colors")
+            var color:JSONObject
+            List(theColors.length()){
+                color = theColors.getJSONObject(it)
+                Color(color.getString("name"),color.getInt("color"))
             }
 
         }catch (e:Exception){

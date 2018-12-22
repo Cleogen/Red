@@ -22,6 +22,8 @@ class NetworkCall(private val response:AsyncResponse) : AsyncTask<String, Int, J
 
         try {
             connection = url.openConnection() as HttpURLConnection
+            connection.connectTimeout = 5000
+            connection.readTimeout = 5000
             connection.connect()
 
             val stream = connection.inputStream

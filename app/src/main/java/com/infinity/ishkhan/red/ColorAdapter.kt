@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.colorcard_layout.view.*
+import org.json.JSONObject
 import java.io.File
 import kotlin.collections.List
 
@@ -47,8 +48,10 @@ class ColorAdapter (private var colors:List<Color>)
 
         holder.cardView.buttonDelete.setOnClickListener {
             colors = colors.take(position) + colors.drop(position + 1)
-            val file = File(context.filesDir,"theColors")
-            file.writeText(colors.joinToString{color -> "${color.name}:${color.color}\n"})
+            val file = File(context.filesDir, "theColors")
+            val jsonData = JSONObject(file.readText())
+            jsonData.getJSONArray("colors").remove(position)
+            file.writeText(jsonData.toString())
 
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, colors.size)
