@@ -1,12 +1,14 @@
-package com.infinity.ishkhan.red.addFragment
+package com.infinity.ishkhan.red.utils
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
-import com.infinity.ishkhan.red.*
-import com.infinity.ishkhan.red.utils.Color
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
+
 
 fun buildURL(colorHex: String): Uri = Uri.Builder().scheme(NETWORK_CALL_SCHEME)
     .authority(COLOR_API_DOMAIN)
@@ -21,7 +23,7 @@ fun saveColor(color: Color, dir: File?): Boolean = try {
     val file = File(dir, COLORS_FILE_NAME)
     val jsonData = JSONObject(file.readText())
     jsonData.getJSONArray(COLOR_IN_JSON)
-        .put(
+        ?.put(
             JSONObject().put(COLOR_NAME_JSON, color.name)
                 .put(COLOR_VALUE_JSON, color.color)
         )
@@ -44,7 +46,12 @@ fun saveColor(color: Color, dir: File?): Boolean = try {
 }
 
 fun getColorsList(dir: File?): List<Color> = try {
-    val theColors = JSONObject(File(dir, COLORS_FILE_NAME).readText()).getJSONArray(COLOR_IN_JSON)
+    val theColors = JSONObject(
+        File(
+            dir,
+            COLORS_FILE_NAME
+        ).readText()
+    ).getJSONArray(COLOR_IN_JSON)
     var color: JSONObject
     List(theColors.length()) {
         color = theColors.getJSONObject(it)
@@ -53,4 +60,10 @@ fun getColorsList(dir: File?): List<Color> = try {
 
 } catch (e: Exception) {
     arrayListOf()
+}
+
+fun hasConnectivity(context: Context): Boolean {
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+    return activeNetwork?.isConnected ?: false
 }

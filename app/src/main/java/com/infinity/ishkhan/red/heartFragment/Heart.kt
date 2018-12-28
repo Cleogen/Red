@@ -6,7 +6,11 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.infinity.ishkhan.red.*
+import com.infinity.ishkhan.red.R
+import com.infinity.ishkhan.red.utils.COLORS_FILE_NAME
+import com.infinity.ishkhan.red.utils.COLOR_IN_JSON
+import com.infinity.ishkhan.red.utils.COLOR_NAME_JSON
+import com.infinity.ishkhan.red.utils.COLOR_VALUE_JSON
 import kotlinx.android.synthetic.main.fragment_heart.view.*
 import org.json.JSONObject
 import java.io.File

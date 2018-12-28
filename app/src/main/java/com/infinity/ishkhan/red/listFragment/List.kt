@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.infinity.ishkhan.red.R
-import com.infinity.ishkhan.red.addFragment.getColorsList
 import com.infinity.ishkhan.red.utils.ColorAdapter
+import com.infinity.ishkhan.red.utils.getColorsList
 import kotlinx.android.synthetic.main.fragment_list.view.*
 
 

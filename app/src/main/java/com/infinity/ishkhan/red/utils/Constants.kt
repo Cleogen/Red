@@ -1,4 +1,4 @@
-package com.infinity.ishkhan.red
+package com.infinity.ishkhan.red.utils
 
 import android.graphics.Color
 import com.skydoves.colorpickerpreference.ColorEnvelope

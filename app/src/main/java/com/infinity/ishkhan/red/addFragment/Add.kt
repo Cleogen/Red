@@ -11,10 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.infinity.ishkhan.red.DEFAULT_COLOR
 import com.infinity.ishkhan.red.R
-import com.infinity.ishkhan.red.utils.Color
-import com.infinity.ishkhan.red.utils.getRequest
+import com.infinity.ishkhan.red.utils.*
 import kotlinx.android.synthetic.main.fragment_add.*
 import kotlinx.android.synthetic.main.fragment_add.view.*
 
@@ -35,23 +33,24 @@ class Add : Fragment() {
         }
 
         view.buttonAdd.setOnClickListener {
-            val uri = buildURL(selectedColorEnvelope.colorHtml)
+            if (hasConnectivity(context!!)) {
+                val uri = buildURL(selectedColorEnvelope.colorHtml)
+                progressBar.visibility = View.VISIBLE
+                getRequest(uri) { response ->
+                    val color = Color(getNameFromJSON(response), selectedColorEnvelope.color)
 
-            progressBar.visibility = View.VISIBLE
+                    Toast.makeText(
+                        context,
+                        if (saveColor(color, context!!.filesDir)) "${color.name} Saved"
+                        else "Failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-            getRequest(uri) { response ->
-                val color = Color(getNameFromJSON(response), selectedColorEnvelope.color)
-
-                Toast.makeText(
-                    context,
-                    if (saveColor(color, context!!.filesDir)) "${color.name} Saved"
-                    else "Failed",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                progressBar.visibility = View.GONE
+                    progressBar.visibility = View.GONE
+                }
+            } else {
+                Toast.makeText(context, "No Network!", Toast.LENGTH_SHORT).show()
             }
-
         }
 
         view.buttonReset.setOnClickListener {
