@@ -2,30 +2,29 @@ package com.infinity.ishkhan.red
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import com.infinity.ishkhan.red.addFragment.Add
+import com.infinity.ishkhan.red.heartFragment.Heart
+import com.infinity.ishkhan.red.listFragment.List
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val fragments = arrayOf(Heart(), Add(), List())
+    private var prevIndex = 0
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_home -> {
-
-                inflateFragment(Heart())
-
+                switchFragment(0)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_dashboard -> {
-
-                inflateFragment(Add())
-
+                switchFragment(1)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_notifications -> {
-
-                inflateFragment(List())
-
+                switchFragment(2)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -38,14 +37,19 @@ class MainActivity : AppCompatActivity() {
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        inflateFragment(Heart())
-
+        switchFragment(0)
     }
 
-    fun inflateFragment(fragment: Fragment){
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFrame, fragment).commit()
+    private fun switchFragment(index: Int) {
+        val transaction = supportFragmentManager.beginTransaction()
+
+        // if the fragment has not yet been added to the container, add it first
+        if (!fragments[index].isAdded)
+            transaction.add(R.id.container, fragments[index])
+
+        transaction.hide(fragments[prevIndex])
+        transaction.show(fragments[index])
+        transaction.commit()
+        prevIndex = index
     }
-
-
 }

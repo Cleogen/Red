@@ -1,17 +1,20 @@
-package com.infinity.ishkhan.red
+package com.infinity.ishkhan.red.utils
 
+import android.net.Uri
+import android.os.AsyncTask
 import org.json.JSONObject
-import java.io.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
-import android.os.AsyncTask
 
 
-class NetworkCall(private val response:AsyncResponse) : AsyncTask<String, Int, JSONObject>() {
+class NetworkCall(private val response: AsyncResponse) : AsyncTask<String, Int, JSONObject>() {
 
     interface AsyncResponse{
-        fun onFinish(out: Boolean,response: JSONObject?)
+        fun onFinish(response: JSONObject?)
     }
 
     override fun doInBackground(vararg params: String?): JSONObject {
@@ -54,6 +57,16 @@ class NetworkCall(private val response:AsyncResponse) : AsyncTask<String, Int, J
 
     override fun onPostExecute(result: JSONObject?) {
         super.onPostExecute(result)
-        response.onFinish(true,result)
+        response.onFinish(result)
     }
+
+}
+
+fun getRequest(uri: Uri, callback: ((JSONObject?) -> Unit)) {
+    NetworkCall(object :
+        NetworkCall.AsyncResponse {
+        override fun onFinish(response: JSONObject?) {
+            callback(response)
+        }
+    }).execute(uri.toString())
 }

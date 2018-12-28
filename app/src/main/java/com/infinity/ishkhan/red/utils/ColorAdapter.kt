@@ -1,17 +1,15 @@
-package com.infinity.ishkhan.red
+package com.infinity.ishkhan.red.utils
 
 import android.content.Context
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import com.infinity.ishkhan.red.R
 import kotlinx.android.synthetic.main.colorcard_layout.view.*
 import org.json.JSONObject
 import java.io.File
-import kotlin.collections.List
 
 class ColorAdapter (private var colors:List<Color>)
     : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
@@ -37,11 +35,11 @@ class ColorAdapter (private var colors:List<Color>)
         holder.cardView.setCardBackgroundColor(colors[position].color)
         holder.cardView.setOnClickListener { v->
             if (v.buttonDelete.visibility == View.GONE){
-                v.layoutParams.height += 100
+                v.layoutParams.height += 120
                 v.buttonDelete.visibility = View.VISIBLE
             }
             else{
-                v.layoutParams.height -= 100
+                v.layoutParams.height -= 120
                 v.buttonDelete.visibility = View.GONE
             }
         }
@@ -57,7 +55,4 @@ class ColorAdapter (private var colors:List<Color>)
             notifyItemRangeChanged(position, colors.size)
         }
     }
-
-
-
 }
