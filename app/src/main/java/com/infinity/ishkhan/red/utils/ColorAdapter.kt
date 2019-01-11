@@ -15,6 +15,7 @@ class ColorAdapter (private var colors:List<Color>)
     : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
 
     private lateinit var context: Context
+    private var expanded: View? = null
 
     class ViewHolder(val cardView: CardView) : RecyclerView.ViewHolder(cardView)
 
@@ -34,14 +35,10 @@ class ColorAdapter (private var colors:List<Color>)
         holder.cardView.cardColorName.text = colors[position].name
         holder.cardView.setCardBackgroundColor(colors[position].color)
         holder.cardView.setOnClickListener { v->
-            if (v.buttonDelete.visibility == View.GONE){
-                v.layoutParams.height += 120
-                v.buttonDelete.visibility = View.VISIBLE
-            }
-            else{
-                v.layoutParams.height -= 120
-                v.buttonDelete.visibility = View.GONE
-            }
+            expanded?.buttonDelete?.visibility = View.GONE
+            v.buttonDelete.visibility = View.VISIBLE
+            expanded = v
+            notifyItemChanged(position, 0)
         }
 
         holder.cardView.buttonDelete.setOnClickListener {
@@ -54,5 +51,15 @@ class ColorAdapter (private var colors:List<Color>)
             notifyItemRemoved(position)
             notifyItemRangeChanged(position, colors.size)
         }
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.cardView.buttonDelete.visibility = View.GONE
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        expanded?.buttonDelete?.visibility = View.VISIBLE
     }
 }

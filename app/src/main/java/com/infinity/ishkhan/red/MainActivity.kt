@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         // if the fragment has not yet been added to the container, add it first
         if (!fragments[index].isAdded)
-            transaction.add(R.id.container, fragments[index])
+            transaction.add(R.id.mainFrame, fragments[index])
 
         transaction.hide(fragments[prevIndex])
         transaction.show(fragments[index])
